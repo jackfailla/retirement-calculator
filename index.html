@@ -184,7 +184,6 @@
         } else if (tier === '2' && ageAtRetirement >= 62) {
           retirementType = 'Service';
         }
-
         let maxOption;
         let maxOptionCalc;
         if (retirementType === 'Service') {
@@ -276,6 +275,7 @@
       }
       return age;
     }
+
     function getFactors(memberAge, spouseAge) {
       const tables = {
         A: {
@@ -299,56 +299,7 @@
         B: {
           55: { 55: 0.8565, 56: 0.8615, 57: 0.8665, 58: 0.8715, 59: 0.8765, 60: 0.8858, 61: 0.8908, 62: 0.8958, 63: 0.9008, 64: 0.9058, 65: 0.9131, 66: 0.9181, 67: 0.9231, 68: 0.9281, 69: 0.9331, 70: 0.9375 },
           56: { 55: 0.8515, 56: 0.8565, 57: 0.8615, 58: 0.8665, 59: 0.8715, 60: 0.8808, 61: 0.8858, 62: 0.8908, 63: 0.8958, 64: 0.9008, 65: 0.9081, 66: 0.9131, 67: 0.9181, 68: 0.9231, 69: 0.9281, 70: 0.9325 },
-          57: { 55: 0.8465, 56: 0.8515, 57: 0.8565, 58: 0.8615, 59: 0.8665, 60: 0.8758, 61: 0.8808, 62: 0.8858, 63: 0.8908, 64: 0.8958, 65: 0.9031, 66: 0.9081, 67: 0.9131, 68: 0.9181, 69: 0.9231, 70: 0.9275 },
-          58: { 55: 0.8415, 56: 0.8465, 57: 0.8515, 58: 0.8565, 59: 0.8615, 60: 0.8708, 61: 0.8758, 62: 0.8808, 63: 0.8858, 64: 0.8908, 65: 0.8981, 66: 0.9031, 67: 0.9081, 68: 0.9131, 69: 0.9181, 70: 0.9225 },
-          59: { 55: 0.8365, 56: 0.8415, 57: 0.8465, 58: 0.8515, 59: 0.8565, 60: 0.8658, 61: 0.8708, 62: 0.8758, 63: 0.8808, 64: 0.8858, 65: 0.8931, 66: 0.8981, 67: 0.9031, 68: 0.9081, 69: 0.9131, 70: 0.9175 },
-          60: { 55: 0.8371, 56: 0.8421, 57: 0.8471, 58: 0.8521, 59: 0.8571, 60: 0.8788, 61: 0.8838, 62: 0.8888, 63: 0.8938, 64: 0.8988, 65: 0.9131, 66: 0.9181, 67: 0.9231, 68: 0.9281, 69: 0.9331, 70: 0.9434 },
-          61: { 55: 0.8321, 56: 0.8371, 57: 0.8421, 58: 0.8471, 59: 0.8521, 60: 0.8738, 61: 0.8788, 62: 0.8838, 63: 0.8888, 64: 0.8938, 65: 0.9081, 66: 0.9131, 67: 0.9181, 68: 0.9231, 69: 0.9281, 70: 0.9384 },
-          62: { 55: 0.8271, 56: 0.8321, 57: 0.8371, 58: 0.8421, 59: 0.8471, 60: 0.8688, 61: 0.8738, 62: 0.8788, 63: 0.8838, 64: 0.8888, 65: 0.9031, 66: 0.9081, 67: 0.9131, 68: 0.9181, 69: 0.9231, 70: 0.9334 },
-          63: { 55: 0.8221, 56: 0.8271, 57: 0.8321, 58: 0.8371, 59: 0.8421, 60: 0.8638, 61: 0.8688, 62: 0.8738, 63: 0.8788, 64: 0.8838, 65: 0.8981, 66: 0.9031, 67: 0.9081, 68: 0.9131, 69: 0.9181, 70: 0.9284 },
-          64: { 55: 0.8171, 56: 0.8221, 57: 0.8271, 58: 0.8321, 59: 0.8371, 60: 0.8588, 61: 0.8638, 62: 0.8688, 63: 0.8738, 64: 0.8788, 65: 0.8931, 66: 0.8981, 67: 0.9031, 68: 0.9081, 69: 0.9131, 70: 0.9234 },
-          65: { 55: 0.8107, 56: 0.8157, 57: 0.8207, 58: 0.8257, 59: 0.8307, 60: 0.8565, 61: 0.8615, 62: 0.8665, 63: 0.8715, 64: 0.8765, 65: 0.9004, 66: 0.9054, 67: 0.9104, 68: 0.9154, 69: 0.9204, 70: 0.9375 },
-          66: { 55: 0.8057, 56: 0.8107, 57: 0.8157, 58: 0.8207, 59: 0.8257, 60: 0.8515, 61: 0.8565, 62: 0.8615, 63: 0.8665, 64: 0.8715, 65: 0.8954, 66: 0.9004, 67: 0.9054, 68: 0.9104, 69: 0.9154, 70: 0.9325 },
-          67: { 55: 0.8007, 56: 0.8057, 57: 0.8107, 58: 0.8157, 59: 0.8207, 60: 0.8465, 61: 0.8515, 62: 0.8565, 63: 0.8615, 64: 0.8665, 65: 0.8904, 66: 0.8954, 67: 0.9004, 68: 0.9054, 69: 0.9104, 70: 0.9275 },
-          68: { 55: 0.7957, 56: 0.8007, 57: 0.8057, 58: 0.8107, 59: 0.8157, 60: 0.8415, 61: 0.8465, 62: 0.8515, 63: 0.8565, 64: 0.8615, 65: 0.8854, 66: 0.8904, 67: 0.8954, 68: 0.9004, 69: 0.9054, 70: 0.9225 },
-          69: { 55: 0.7907, 56: 0.7957, 57: 0.8007, 58: 0.8057, 59: 0.8107, 60: 0.8365, 61: 0.8415, 62: 0.8465, 63: 0.8515, 64: 0.8565, 65: 0.8804, 66: 0.8854, 67: 0.8904, 68: 0.8954, 69: 0.9004, 70: 0.9175 },
-          70: { 55: 0.7780, 56: 0.7830, 57: 0.7880, 58: 0.7930, 59: 0.7980, 60: 0.8289, 61: 0.8339, 62: 0.8389, 63: 0.8439, 64: 0.8489, 65: 0.8858, 66: 0.8908, 67: 0.8958, 68: 0.9008, 69: 0.9058, 70: 0.9288 }
-        },
-        C: {
-          55: { 55: 0.9004, 56: 0.9044, 57: 0.9084, 58: 0.9124, 59: 0.9164, 60: 0.9228, 61: 0.9268, 62: 0.9308, 63: 0.9348, 64: 0.9388, 65: 0.9434, 66: 0.9474, 67: 0.9514, 68: 0.9554, 69: 0.9594, 70: 0.9619 },
-          56: { 55: 0.8964, 56: 0.9004, 57: 0.9044, 58: 0.9084, 59: 0.9124, 60: 0.9188, 61: 0.9228, 62: 0.9268, 63: 0.9308, 64: 0.9348, 65: 0.9394, 66: 0.9434, 67: 0.9474, 68: 0.9514, 69: 0.9554, 70: 0.9579 },
-          57: { 55: 0.8924, 56: 0.8964, 57: 0.9004, 58: 0.9044, 59: 0.9084, 60: 0.9148, 61: 0.9188, 62: 0.9228, 63: 0.9268, 64: 0.9308, 65: 0.9354, 66: 0.9394, 67: 0.9434, 68: 0.9474, 69: 0.9514, 70: 0.9539 },
-          58: { 55: 0.8884, 56: 0.8924, 57: 0.8964, 58: 0.9004, 59: 0.9044, 60: 0.9108, 61: 0.9148, 62: 0.9188, 63: 0.9228, 64: 0.9268, 65: 0.9314, 66: 0.9354, 67: 0.9394, 68: 0.9434, 69: 0.9474, 70: 0.9499 },
-          59: { 55: 0.8844, 56: 0.8884, 57: 0.8924, 58: 0.8964, 59: 0.9004, 60: 0.9068, 61: 0.9108, 62: 0.9148, 63: 0.9188, 64: 0.9228, 65: 0.9274, 66: 0.9314, 67: 0.9354, 68: 0.9394, 69: 0.9434, 70: 0.9459 },
-          60: { 55: 0.8858, 56: 0.8898, 57: 0.8938, 58: 0.8978, 59: 0.9018, 60: 0.9178, 61: 0.9218, 62: 0.9258, 63: 0.9298, 64: 0.9338, 65: 0.9434, 66: 0.9474, 67: 0.9514, 68: 0.9554, 69: 0.9594, 70: 0.9670 },
-          61: { 55: 0.8818, 56: 0.8858, 57: 0.8898, 58: 0.8938, 59: 0.8978, 60: 0.9138, 61: 0.9178, 62: 0.9218, 63: 0.9258, 64: 0.9298, 65: 0.9394, 66: 0.9434, 67: 0.9474, 68: 0.9514, 69: 0.9554, 70: 0.9630 },
-          62: { 55: 0.8778, 56: 0.8818, 57: 0.8858, 58: 0.8898, 59: 0.8938, 60: 0.9098, 61: 0.9138, 62: 0.9178, 63: 0.9218, 64: 0.9258, 65: 0.9354, 66: 0.9394, 67: 0.9434, 68: 0.9474, 69: 0.9514, 70: 0.9590 },
-          63: { 55: 0.8738, 56: 0.8778, 57: 0.8818, 58: 0.8858, 59: 0.8898, 60: 0.9058, 61: 0.9098, 62: 0.9138, 63: 0.9178, 64: 0.9218, 65: 0.9314, 66: 0.9354, 67: 0.9394, 68: 0.9434, 69: 0.9474, 70: 0.9550 },
-          64: { 55: 0.8698, 56: 0.8738, 57: 0.8778, 58: 0.8818, 59: 0.8858, 60: 0.9018, 61: 0.9058, 62: 0.9098, 63: 0.9138, 64: 0.9178, 65: 0.9274, 66: 0.9314, 67: 0.9354, 68: 0.9394, 69: 0.9434, 70: 0.9510 },
-          65: { 55: 0.8652, 56: 0.8692, 57: 0.8732, 58: 0.8772, 59: 0.8812, 60: 0.9004, 61: 0.9044, 62: 0.9084, 63: 0.9124, 64: 0.9164, 65: 0.9324, 66: 0.9364, 67: 0.9404, 68: 0.9444, 69: 0.9484, 70: 0.9619 },
-          66: { 55: 0.8612, 56: 0.8652, 57: 0.8692, 58: 0.8732, 59: 0.8772, 60: 0.8964, 61: 0.9004, 62: 0.9044, 63: 0.9084, 64: 0.9124, 65: 0.9284, 66: 0.9324, 67: 0.9364, 68: 0.9404, 69: 0.9444, 70: 0.9579 },
-          67: { 55: 0.8572, 56: 0.8612, 57: 0.8652, 58: 0.8692, 59: 0.8732, 60: 0.8924, 61: 0.8964, 62: 0.9004, 63: 0.9044, 64: 0.9084, 65: 0.9244, 66: 0.9284, 67: 0.9324, 68: 0.9364, 69: 0.9404, 70: 0.9539 },
-          68: { 55: 0.8532, 56: 0.8572, 57: 0.8612, 58: 0.8652, 59: 0.8692, 60: 0.8884, 61: 0.8924, 62: 0.8964, 63: 0.9004, 64: 0.9044, 65: 0.9204, 66: 0.9244, 67: 0.9284, 68: 0.9324, 69: 0.9364, 70: 0.9499 },
-          69: { 55: 0.8492, 56: 0.8532, 57: 0.8572, 58: 0.8612, 59: 0.8652, 60: 0.8844, 61: 0.8884, 62: 0.8924, 63: 0.8964, 64: 0.9004, 65: 0.9164, 66: 0.9204, 67: 0.9244, 68: 0.9284, 69: 0.9324, 70: 0.9459 },
-          70: { 55: 0.8371, 56: 0.8411, 57: 0.8451, 58: 0.8491, 59: 0.8531, 60: 0.8788, 61: 0.8828, 62: 0.8868, 63: 0.8908, 64: 0.8948, 65: 0.9178, 66: 0.9218, 67: 0.9258, 68: 0.9298, 69: 0.9338, 70: 0.9525 }
-        },
-        D: {
-          55: { 55: 0.9525, 56: 0.9555, 57: 0.9585, 58: 0.9615, 59: 0.9645, 60: 0.9670, 61: 0.9700, 62: 0.9730, 63: 0.9760, 64: 0.9790, 65: 0.9788, 66: 0.9818, 67: 0.9848, 68: 0.9878, 69: 0.9908, 70: 0.9891 },
-          56: { 55: 0.9495, 56: 0.9525, 57: 0.9555, 58: 0.9585, 59: 0.9615, 60: 0.9640, 61: 0.9670, 62: 0.9700, 63: 0.9730, 64: 0.9760, 65: 0.9758, 66: 0.9788, 67: 0.9818, 68: 0.9848, 69: 0.9878, 70: 0.9861 },
-          57: { 55: 0.9465, 56: 0.9495, 57: 0.9525, 58: 0.9555, 59: 0.9585, 60: 0.9610, 61: 0.9640, 62: 0.9670, 63: 0.9700, 64: 0.9730, 65: 0.9728, 66: 0.9758, 67: 0.9788, 68: 0.9818, 69: 0.9848, 70: 0.9831 },
-          58: { 55: 0.9435, 56: 0.9465, 57: 0.9495, 58: 0.9525, 59: 0.9555, 60: 0.9580, 61: 0.9610, 62: 0.9640, 63: 0.9670, 64: 0.9700, 65: 0.9698, 66: 0.9728, 67: 0.9758, 68: 0.9788, 69: 0.9818, 70: 0.9801 },
-          59: { 55: 0.9405, 56: 0.9435, 57: 0.9465, 58: 0.9495, 59: 0.9525, 60: 0.9550, 61: 0.9580, 62: 0.9610, 63: 0.9640, 64: 0.9670, 65: 0.9668, 66: 0.9698, 67: 0.9728, 68: 0.9758, 69: 0.9788, 70: 0.9771 },
-          60: { 55: 0.9434, 56: 0.9464, 57: 0.9494, 58: 0.9524, 59: 0.9554, 60: 0.9619, 61: 0.9649, 62: 0.9679, 63: 0.9709, 64: 0.9739, 65: 0.9788, 66: 0.9818, 67: 0.9848, 68: 0.9878, 69: 0.9908, 70: 0.9919 },
-          61: { 55: 0.9404, 56: 0.9434, 57: 0.9464, 58: 0.9494, 59: 0.9524, 60: 0.9589, 61: 0.9619, 62: 0.9649, 63: 0.9679, 64: 0.9709, 65: 0.9758, 66: 0.9788, 67: 0.9818, 68: 0.9848, 69: 0.9878, 70: 0.9889 },
-          62: { 55: 0.9374, 56: 0.9404, 57: 0.9434, 58: 0.9464, 59: 0.9494, 60: 0.9559, 61: 0.9589, 62: 0.9619, 63: 0.9649, 64: 0.9679, 65: 0.9728, 66: 0.9758, 67: 0.9788, 68: 0.9818, 69: 0.9848, 70: 0.9859 },
-          63: { 55: 0.9344, 56: 0.9374, 57: 0.9404, 58: 0.9434, 59: 0.9464, 60: 0.9529, 61: 0.9559, 62: 0.9589, 63: 0.9619, 64: 0.9649, 65: 0.9698, 66: 0.9728, 67: 0.9758, 68: 0.9788, 69: 0.9818, 70: 0.9829 },
-          64: { 55: 0.9314, 56: 0.9344, 57: 0.9374, 58: 0.9404, 59: 0.9434, 60: 0.9499, 61: 0.9529, 62: 0.9559, 63: 0.9589, 64: 0.9619, 65: 0.9668, 66: 0.9698, 67: 0.9728, 68: 0.9758, 69: 0.9788, 70: 0.9799 },
-          65: { 55: 0.9288, 56: 0.9318, 57: 0.9348, 58: 0.9378, 59: 0.9408, 60: 0.9525, 61: 0.9555, 62: 0.9585, 63: 0.9615, 64: 0.9645, 65: 0.9723, 66: 0.9753, 67: 0.9783, 68: 0.9813, 69: 0.9843, 70: 0.9891 },
-          66: { 55: 0.9258, 56: 0.9288, 57: 0.9318, 58: 0.9348, 59: 0.9378, 60: 0.9495, 61: 0.9525, 62: 0.9555, 63: 0.9585, 64: 0.9615, 65: 0.9693, 66: 0.9723, 67: 0.9753, 68: 0.9783, 69: 0.9813, 70: 0.9861 },
-          67: { 55: 0.9228, 56: 0.9258, 57: 0.9288, 58: 0.9318, 59: 0.9348, 60: 0.9465, 61: 0.9495, 62: 0.9525, 63: 0.9555, 64: 0.9585, 65: 0.9663, 66: 0.9693, 67: 0.9723, 68: 0.9753, 69: 0.9783, 70: 0.9831 },
-          68: { 55: 0.9198, 56: 0.9228, 57: 0.9258, 58: 0.9288, 59: 0.9318, 60: 0.9435, 61: 0.9465, 62: 0.9495, 63: 0.9525, 64: 0.9555, 65: 0.9633, 66: 0.9663, 67: 0.9693, 68: 0.9723, 69: 0.9753, 70: 0.9801 },
-          69: { 55: 0.9168, 56: 0.9198, 57: 0.9228, 58: 0.9258, 59: 0.9288, 60: 0.9405, 61: 0.9435, 62: 0.9465, 63: 0.9495, 64: 0.9525, 65: 0.9603, 66: 0.9633, 67: 0.9663, 68: 0.9693, 69: 0.9723, 70: 0.9771 },
-          70: { 55: 0.9067, 56: 0.9097, 57: 0.9127, 58: 0.9157, 59: 0.9187, 60: 0.9375, 61: 0.9405, 62: 0.9435, 63: 0.9465, 64: 0.9495, 65: 0.9619, 66: 0.9649, 67: 0.9679, 68: 0.9709, 69: 0.9739, 70: 0.9832 }
+          57: { 55: 0.8465, 56: 0.8515, 57: 0.8565, 58: 0.8615, 59: 0.8665, 60: 0.8758, 61: 0.8808, 62: 0.8858, 63: 0.8908, 64: 0.8958, 65: 0.9031, 66: 0.9081, 67: 0.9131, 68: 0.9181, 69: 0.9231, 70: 0.9275 }
         }
       };
 
@@ -358,164 +309,10 @@
       return {
         A: tables.A[mAge][sAge],
         B: tables.B[mAge][sAge],
-        C: tables.C[mAge][sAge],
-        D: tables.D[mAge][sAge]
+        C: tables.C[mAge][sAge] || 0, // Default to 0 if not defined
+        D: tables.D[mAge][sAge] || 0  // Default to 0 if not defined
       };
     }
-
-      // Build summary table
-      let summaryTable = `
-        <h3>Summary of Retirement Options</h3>
-        <table class="summary-table">
-          <tr>
-            <th>Retirement Date</th>
-            <th>Maximum Option</th>
-            <th>Option A (100%)</th>
-            <th>Option B (75%)</th>
-            <th>Option C (50%)</th>
-            <th>Option D (25%)</th>
-          </tr>
-      `;
-      summaryData.forEach(row => {
-        summaryTable += `
-          <tr>
-            <td>${row.date}</td>
-            <td>${row.maxOption}</td>
-            <td>${row.optionA}</td>
-            <td>${row.optionB}</td>
-            <td>${row.optionC}</td>
-            <td>${row.optionD}</td>
-          </tr>
-        `;
-      });
-      summaryTable += '</table>';
-
-      document.getElementById('results').innerHTML = detailedResults + summaryTable;
-    }
-
-    function calculateAge(birthDate, targetDate) {
-      let age = targetDate.getFullYear() - birthDate.getFullYear();
-      const m = targetDate.getMonth() - birthDate.getMonth();
-      if (m < 0 || (m === 0 && targetDate.getDate() < birthDate.getDate())) {
-        age--;
-      }
-      return age;
-    }
-
-    function calculateRetirement() {
-      const tier = document.getElementById('tier').value;
-      const workStartDate = new Date(document.getElementById('workStartDate').value);
-      const birthDate = new Date(document.getElementById('birthDate').value);
-      const spouseBirthDate = document.getElementById('spouseBirthDate').value ? new Date(document.getElementById('spouseBirthDate').value) : null;
-
-      const retirementDates = [
-        { date: new Date(document.getElementById('retirementDate1').value), salary: parseFloat(document.getElementById('averageSalary1').value) },
-        { date: new Date(document.getElementById('retirementDate2').value), salary: parseFloat(document.getElementById('averageSalary2').value) },
-        { date: new Date(document.getElementById('retirementDate3').value), salary: parseFloat(document.getElementById('averageSalary3').value) },
-        { date: new Date(document.getElementById('retirementDate4').value), salary: parseFloat(document.getElementById('averageSalary4').value) }
-      ];
-
-      let detailedResults = '';
-      let summaryData = [];
-
-      retirementDates.forEach((ret, index) => {
-        const retirementDate = ret.date;
-        const averageSalary = ret.salary;
-
-        const terminationDate = new Date(retirementDate);
-        terminationDate.setDate(terminationDate.getDate() - 1);
-
-        const serviceCredit = (terminationDate - workStartDate) / (1000 * 60 * 60 * 24 * 365.25);
-        const ageAtRetirement = calculateAge(birthDate, retirementDate);
-
-        let retirementType = 'Early';
-        let thresholdAge = tier === '1' ? 60 : 62;
-        if (tier === '1' && ageAtRetirement >= 60) {
-          retirementType = 'Service';
-        } else if (tier === '2' && ageAtRetirement >= 62) {
-          retirementType = 'Service';
-        }
-
-        let maxOption;
-        let maxOptionCalc;
-        if (retirementType === 'Service') {
-          maxOption = (serviceCredit / 55) * averageSalary;
-          maxOptionCalc = `(${serviceCredit.toFixed(2)} years / 55) * ${averageSalary.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}`;
-        } else {
-          const reductionFactor = Math.max(1 - (thresholdAge - ageAtRetirement) * 0.01, 0.5);
-          maxOption = (serviceCredit / 55) * averageSalary * reductionFactor;
-          maxOptionCalc = `(${serviceCredit.toFixed(2)} years / 55) * ${averageSalary.toLocaleString('en-US', { style: 'currency', currency: 'USD' })} * ${reductionFactor.toFixed(2)} (reduction factor)`;
-        }
-
-        let optionA, optionB, optionC, optionD;
-        let optionACalc, optionBCalc, optionCCalc, optionDCalc;
-        if (spouseBirthDate) {
-          const spouseAge = calculateAge(spouseBirthDate, retirementDate);
-          const factors = getFactors(Math.floor(ageAtRetirement), Math.floor(spouseAge));
-          optionA = maxOption * factors.A;
-          optionB = maxOption * factors.B;
-          optionC = maxOption * factors.C;
-          optionD = maxOption * factors.D;
-          optionACalc = `${maxOption.toLocaleString('en-US', { style: 'currency', currency: 'USD' })} * ${factors.A.toFixed(4)}`;
-          optionBCalc = `${maxOption.toLocaleString('en-US', { style: 'currency', currency: 'USD' })} * ${factors.B.toFixed(4)}`;
-          optionCCalc = `${maxOption.toLocaleString('en-US', { style: 'currency', currency: 'USD' })} * ${factors.C.toFixed(4)}`;
-          optionDCalc = `${maxOption.toLocaleString('en-US', { style: 'currency', currency: 'USD' })} * ${factors.D.toFixed(4)}`;
-        } else {
-          optionA = optionB = optionC = optionD = 'N/A (No spouse)';
-          optionACalc = optionBCalc = optionCCalc = optionDCalc = 'N/A';
-        }
-
-        detailedResults += `
-          <div class="result-card">
-            <h4>Retirement Date ${index + 1}: ${retirementDate.toLocaleDateString()}</h4>
-            <p><strong>Service Credit:</strong> ${serviceCredit.toFixed(2)} years (from ${workStartDate.toLocaleDateString()} to ${terminationDate.toLocaleDateString()})</p>
-            <p><strong>Age at Retirement:</strong> ${ageAtRetirement} years</p>
-            <p><strong>Retirement Type:</strong> ${retirementType}</p>
-            <p><strong>Maximum Option:</strong> ${maxOption.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}<br>Calculation: ${maxOptionCalc}</p>
-            <p><strong>Option A (100% to survivor):</strong> ${typeof optionA === 'number' ? optionA.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : optionA}<br>Calculation: ${optionACalc}</p>
-            <p><strong>Option B (75% to survivor):</strong> ${typeof optionB === 'number' ? optionB.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : optionB}<br>Calculation: ${optionBCalc}</p>
-            <p><strong>Option C (50% to survivor):</strong> ${typeof optionC === 'number' ? optionC.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : optionC}<br>Calculation: ${optionCCalc}</p>
-            <p><strong>Option D (25% to survivor):</strong> ${typeof optionD === 'number' ? optionD.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : optionD}<br>Calculation: ${optionDCalc}</p>
-          </div>
-        `;
-
-        summaryData.push({
-          date: retirementDate.toLocaleDateString(),
-          maxOption: maxOption.toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
-          optionA: typeof optionA === 'number' ? optionA.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : optionA,
-          optionB: typeof optionB === 'number' ? optionB.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : optionB,
-          optionC: typeof optionC === 'number' ? optionC.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : optionC,
-          optionD: typeof optionD === 'number' ? optionD.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : optionD
-        });
-      });
-
-      // Build summary table
-      let summaryTable = `
-        <h3>Summary of Retirement Options</h3>
-        <table class="summary-table">
-          <tr>
-            <th>Retirement Date</th>
-            <th>Maximum Option</th>
-            <th>Option A (100%)</th>
-            <th>Option B (75%)</th>
-            <th>Option C (50%)</th>
-            <th>Option D (25%)</th>
-          </tr>
-      `;
-      summaryData.forEach(row => {
-        summaryTable += `
-          <tr>
-            <td>${row.date}</td>
-            <td>${row.maxOption}</td>
-            <td>${row.optionA}</td>
-            <td>${row.optionB}</td>
-            <td>${row.optionC}</td>
-            <td>${row.optionD}</td>
-          </tr>
-        `;
-      });
-      summaryTable += '</table>';
-
-      document.getElementById('results').innerHTML = detailedResults + summaryTable;
-    }
   </script>
+</body>
+</html>
