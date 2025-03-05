@@ -1,0 +1,135 @@
+<div>
+  <h2>Retirement Benefits Calculator</h2>
+  <p>Enter your details below to estimate your retirement benefits for four dates.</p>
+  <form id="retirementForm">
+    <label for="tier">Select Tier:</label>
+    <select id="tier" name="tier">
+      <option value="1">Tier 1 (Enrolled before July 1, 2007)</option>
+      <option value="2">Tier 2 (Enrolled on/after July 1, 2007)</option>
+      <!-- Add more tiers as needed -->
+    </select><br><br>
+
+    <label for="workStartDate">Work Start Date:</label>
+    <input type="date" id="workStartDate" name="workStartDate" required><br><br>
+
+    <label for="birthDate">Your Birthdate:</label>
+    <input type="date" id="birthDate" name="birthDate" required><br><br>
+
+    <label for="spouseBirthDate">Spouse's Birthdate (optional):</label>
+    <input type="date" id="spouseBirthDate" name="spouseBirthDate"><br><br>
+
+    <label for="retirementDate1">Retirement Date 1 (will be set to 1st of month):</label>
+    <input type="date" id="retirementDate1" name="retirementDate1" required><br><br>
+
+    <label for="retirementDate2">Retirement Date 2 (will be set to 1st of month):</label>
+    <input type="date" id="retirementDate2" name="retirementDate2" required><br><br>
+
+    <label for="retirementDate3">Retirement Date 3 (will be set to 1st of month):</label>
+    <input type="date" id="retirementDate3" name="retirementDate3" required><br><br>
+
+    <label for="retirementDate4">Retirement Date 4 (will be set to 1st of month):</label>
+    <input type="date" id="retirementDate4" name="retirementDate4" required><br><br>
+
+    <label for="averageSalary">Average Salary (preceding 36 months):</label>
+    <input type="number" id="averageSalary" name="averageSalary" step="0.01" min="0" required><br><br>
+
+    <button type="button" onclick="calculateRetirement()">Calculate Benefits</button>
+  </form>
+
+  <div id="results" style="margin-top: 20px;"></div>
+</div>
+
+<script>
+function calculateRetirement() {
+  // Get input values
+  const tier = document.getElementById('tier').value;
+  const workStartDate = new Date(document.getElementById('workStartDate').value);
+  const birthDate = new Date(document.getElementById('birthDate').value);
+  const spouseBirthDate = document.getElementById('spouseBirthDate').value ? new Date(document.getElementById('spouseBirthDate').value) : null;
+  const averageSalary = parseFloat(document.getElementById('averageSalary').value);
+  const retirementDates = [
+    new Date(document.getElementById('retirementDate1').value),
+    new Date(document.getElementById('retirementDate2').value),
+    new Date(document.getElementById('retirementDate3').value),
+    new Date(document.getElementById('retirementDate4').value)
+  ];
+
+  let results = '<h3>Retirement Benefits Estimates</h3>';
+  retirementDates.forEach((retDate, index) => {
+    // Set retirement date to first of the month
+    const retirementDate = new Date(retDate.getFullYear(), retDate.getMonth(), 1);
+    // Termination date is last day of prior month (not directly used here but noted)
+    const terminationDate = new Date(retirementDate);
+    terminationDate.setDate(0);
+
+    // Calculate age at retirement
+    const ageAtRetirement = calculateAge(birthDate, retirementDate);
+    // Calculate service credit (approximate years)
+    const serviceCredit = (retirementDate - workStartDate) / (1000 * 60 * 60 * 24 * 365.25);
+
+    // Determine retirement type (simplified)
+    let retirementType = 'Early';
+    if (tier === '1' && ageAtRetirement >= 60) {
+      retirementType = 'Service';
+    } else if (tier === '2' && ageAtRetirement >= 62) {
+      retirementType = 'Service';
+    }
+
+    // Calculate Maximum Option
+    let maxOption;
+    if (retirementType === 'Service') {
+      maxOption = (serviceCredit / 55) * averageSalary;
+    } else {
+      // Early Retirement with reduction (e.g., 1% per year under threshold)
+      const thresholdAge = tier === '1' ? 60 : 62;
+      const reductionFactor = 1 - (thresholdAge - ageAtRetirement) * 0.01;
+      maxOption = (serviceCredit / 55) * averageSalary * Math.max(reductionFactor, 0.5); // Minimum 50%
+    }
+
+    // Calculate Options A, B, C, D if spouse's birthdate is provided
+    let optionA, optionB, optionC, optionD;
+    if (spouseBirthDate) {
+      const spouseAge = calculateAge(spouseBirthDate, retirementDate);
+      const factors = getFactors(Math.floor(ageAtRetirement), Math.floor(spouseAge));
+      optionA = maxOption * factors.A;
+      optionB = maxOption * factors.B;
+      optionC = maxOption * factors.C;
+      optionD = maxOption * factors.D;
+    } else {
+      optionA = optionB = optionC = optionD = 'N/A (No spouse)';
+    }
+
+    // Append results
+    results += `<h4>Retirement Date ${index + 1}: ${retirementDate.toLocaleDateString()}</h4>`;
+    results += `<p>Maximum Option: $${maxOption.toFixed(2)}</p>`;
+    results += `<p>Option A (100% to survivor): ${typeof optionA === 'number' ? '$' + optionA.toFixed(2) : optionA}</p>`;
+    results += `<p>Option B (75% to survivor): ${typeof optionB === 'number' ? '$' + optionB.toFixed(2) : optionB}</p>`;
+    results += `<p>Option C (50% to survivor): ${typeof optionC === 'number' ? '$' + optionC.toFixed(2) : optionC}</p>`;
+    results += `<p>Option D (25% to survivor): ${typeof optionD === 'number' ? '$' + optionD.toFixed(2) : optionD}</p>`;
+  });
+
+  document.getElementById('results').innerHTML = results;
+}
+
+function calculateAge(birthDate, targetDate) {
+  let age = targetDate.getFullYear() - birthDate.getFullYear();
+  const m = targetDate.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && targetDate.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+}
+
+function getFactors(memberAge, spouseAge) {
+  // Simplified factors for demonstration (based on typical values from the document)
+  // In reality, use a lookup table with actual data from fact54.pdf
+  const exampleFactors = {
+    60: { 60: { A: 0.78, B: 0.82, C: 0.87, D: 0.92 }, 65: { A: 0.80, B: 0.84, C: 0.89, D: 0.93 } },
+    65: { 60: { A: 0.82, B: 0.86, C: 0.90, D: 0.94 }, 65: { A: 0.85, B: 0.89, C: 0.93, D: 0.96 } }
+  };
+  // Use closest available ages (simplified nearest-neighbor)
+  const mAge = memberAge <= 60 ? 60 : 65;
+  const sAge = spouseAge <= 60 ? 60 : 65;
+  return exampleFactors[mAge][sAge];
+}
+</script>
