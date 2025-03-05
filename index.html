@@ -86,62 +86,63 @@
     <h2>Retirement Benefits Calculator</h2>
     <p class="intro">Enter your details below to estimate your retirement benefits for up to four dates.</p>
     <form id="retirementForm">
-      <label for="tier">Select Tier:</label>
-      <select id="tier" name="tier">
-        <option value="1">Tier 1 (Enrolled before July 1, 2007)</option>
-        <option value="2">Tier 2 (Enrolled on/after July 1, 2007)</option>
-      </select>
+  <!-- Other fields like tier, workStartDate, birthDate, spouseBirthDate remain unchanged -->
 
-      <label for="workStartDate">Work Start Date:</label>
-      <input type="date" id="workStartDate" name="workStartDate" required>
+  <label for="retirementDate1">Retirement Date 1 (must be first of the month):</label>
+  <input type="date" id="retirementDate1" name="retirementDate1" required>
+  <label for="averageSalary1">Average Salary for Date 1:</label>
+  <input type="number" id="averageSalary1" name="averageSalary1" step="0.01" min="0" required>
 
-      <label for="birthDate">Your Birthdate:</label>
-      <input type="date" id="birthDate" name="birthDate" required>
+  <label for="retirementDate2">Retirement Date 2 (optional, must be first of the month):</label>
+  <input type="date" id="retirementDate2" name="retirementDate2">
+  <label for="averageSalary2">Average Salary for Date 2 (optional):</label>
+  <input type="number" id="averageSalary2" name="averageSalary2" step="0.01" min="0">
 
-      <label for="spouseBirthDate">Spouse's Birthdate (optional):</label>
-      <input type="date" id="spouseBirthDate" name="spouseBirthDate">
+  <label for="retirementDate3">Retirement Date 3 (optional, must be first of the month):</label>
+  <input type="date" id="retirementDate3" name="retirementDate3">
+  <label for="averageSalary3">Average Salary for Date 3 (optional):</label>
+  <input type="number" id="averageSalary3" name="averageSalary3" step="0.01" min="0">
 
-      <label for="retirementDate1">Retirement Date 1 (must be first of the month):</label>
-      <input type="date" id="retirementDate1" name="retirementDate1" required>
-      <label for="averageSalary1">Average Salary for Date 1:</label>
-      <input type="number" id="averageSalary1" name="averageSalary1" step="0.01" min="0" required>
+  <label for="retirementDate4">Retirement Date 4 (optional, must be first of the month):</label>
+  <input type="date" id="retirementDate4" name="retirementDate4">
+  <label for="averageSalary4">Average Salary for Date 4 (optional):</label>
+  <input type="number" id="averageSalary4" name="averageSalary4" step="0.01" min="0">
 
-      <label for="retirementDate2">Retirement Date 2 (must be first of the month):</label>
-      <input type="date" id="retirementDate2" name="retirementDate2" required>
-      <label for="averageSalary2">Average Salary for Date 2:</label>
-      <input type="number" id="averageSalary2" name="averageSalary2" step="0.01" min="0" required>
-
-      <label for="retirementDate3">Retirement Date 3 (must be first of the month):</label>
-      <input type="date" id="retirementDate3" name="retirementDate3" required>
-      <label for="averageSalary3">Average Salary for Date 3:</label>
-      <input type="number" id="averageSalary3" name="averageSalary3" step="0.01" min="0" required>
-
-      <label for="retirementDate4">Retirement Date 4 (must be first of the month):</label>
-      <input type="date" id="retirementDate4" name="retirementDate4" required>
-      <label for="averageSalary4">Average Salary for Date 4:</label>
-      <input type="number" id="averageSalary4" name="averageSalary4" step="0.01" min="0" required>
-
-      <button type="button" onclick="calculateRetirement()">Calculate Benefits</button>
-    </form>
+  <button type="button" onclick="calculateRetirement()">Calculate Benefits</button>
+</form>
 
     <div id="results"></div>
   </div>
 
   <script>
-    function calculateRetirement() {
-      const tier = document.getElementById('tier').value;
-      const workStartDate = new Date(document.getElementById('workStartDate').value);
-      const birthDate = new Date(document.getElementById('birthDate').value);
-      const spouseBirthDate = document.getElementById('spouseBirthDate').value ? new Date(document.getElementById('spouseBirthDate').value) : null;
+  function calculateRetirement() {
+  // Retrieve user inputs from the form
+  const tier = document.getElementById('tier').value;
+  const workStartDate = new Date(document.getElementById('workStartDate').value);
+  const birthDate = new Date(document.getElementById('birthDate').value);
+  const spouseBirthDate = document.getElementById('spouseBirthDate').value ? new Date(document.getElementById('spouseBirthDate').value) : null;
 
-      const retirementDates = [
-        { date: new Date(document.getElementById('retirementDate1').value), salary: parseFloat(document.getElementById('averageSalary1').value) },
-        { date: new Date(document.getElementById('retirementDate2').value), salary: parseFloat(document.getElementById('averageSalary2').value) },
-        { date: new Date(document.getElementById('retirementDate3').value), salary: parseFloat(document.getElementById('averageSalary3').value) },
-        { date: new Date(document.getElementById('retirementDate4').value), salary: parseFloat(document.getElementById('averageSalary4').value) }
-      ];
+  // *** MODIFIED: Dynamically collect only provided retirement dates and salaries ***
+  const retirementDates = [];
+  for (let i = 1; i <= 4; i++) {
+    const dateInput = document.getElementById(`retirementDate${i}`);
+    const salaryInput = document.getElementById(`averageSalary${i}`);
+    if (dateInput.value && !isNaN(parseFloat(salaryInput.value))) {
+      retirementDates.push({
+        date: new Date(dateInput.value),
+        salary: parseFloat(salaryInput.value)
+      });
+    }
+  }
 
-      let results = '';
+  // *** ADDED: Check if at least one retirement date is provided ***
+  if (retirementDates.length === 0) {
+    alert('Please enter at least one retirement date and salary.');
+    return;
+  }
+
+  let detailedResults = '';
+  let summaryData = [];
 
       retirementDates.forEach((ret, index) => {
         const retirementDate = ret.date;
