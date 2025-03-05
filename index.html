@@ -87,7 +87,21 @@
     <p class="intro">Enter your details below to estimate your retirement benefits for up to four dates.</p>
     <form id="retirementForm">
   <!-- Other fields like tier, workStartDate, birthDate, spouseBirthDate remain unchanged -->
+      <label for="tier">Select Tier:</label>
+      <select id="tier" name="tier">
+        <option value="1">Tier 1 (Enrolled before July 1, 2007)</option>
+        <option value="2">Tier 2 (Enrolled on/after July 1, 2007)</option>
+      </select>
 
+      <label for="workStartDate">Work Start Date:</label>
+      <input type="date" id="workStartDate" name="workStartDate" required>
+
+      <label for="birthDate">Your Birthdate:</label>
+      <input type="date" id="birthDate" name="birthDate" required>
+
+      <label for="spouseBirthDate">Spouse's Birthdate (optional):</label>
+      <input type="date" id="spouseBirthDate" name="spouseBirthDate">
+      
   <label for="retirementDate1">Retirement Date 1 (must be first of the month):</label>
   <input type="date" id="retirementDate1" name="retirementDate1" required>
   <label for="averageSalary1">Average Salary for Date 1:</label>
