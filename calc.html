@@ -335,78 +335,28 @@
         if (summaryElement) {
             if (summaryData.length > 0) {
                 const summaryTable = `
-                    <h3>Summary of Retirement Options (Monthly)</h3>
-<style>
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0;
-        font-family: Arial, sans-serif;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    }
+                <h3>Summary of Retirement Options (Monthly)</h3>
+                    <table>
+                        <tr>
+                            <th>Retirement Date</th>
+                            <th>Maximum Option</th>
+                            <th>Option A</th>
+                            <th>Option B</th>
+                            <th>Option C</th>
+                            <th>Option D</th>
+                        </tr>
+                        ${summaryData.map(data => `
+                            <tr>
+                                <td>${data.retireDate || 'N/A'}</td>
+                                <td>$${formatNumber(data.maxOption)}</td>
+                                <td>$${formatNumber(data.optionA)}</td>
+                                <td>$${formatNumber(data.optionB)}</td>
+                                <td>$${formatNumber(data.optionC)}</td>
+                                <td>$${formatNumber(data.optionD)}</td>
+                            </tr>
+                        `).join('')}
+                    </table>    
 
-    th, td {
-        padding: 12px 15px;
-        text-align: right;
-    }
-
-    th {
-        background-color: #4CAF50;
-        color: white;
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
-    }
-
-    tr {
-        border-bottom: 1px solid #ddd;
-    }
-
-    tr:nth-child(even) {
-        background-color: #f8f8f8;
-    }
-
-    tr:hover {
-        background-color: #f1f1f1;
-    }
-
-    td:first-child {
-        text-align: left;
-        font-weight: bold;
-    }
-</style>
-
-<script>
-    // Function to format date as MMM-YY
-    function formatDate(dateStr) {
-        if (!dateStr || dateStr === 'N/A') return 'N/A';
-        const date = new Date(dateStr);
-        return date.toLocaleString('en-US', { 
-            month: 'short',
-            year: '2-digit'
-        }).replace(' ', '-');
-    }
-</script>
-
-<table>
-    <tr>
-        <th>Retirement Date</th>
-        <th>Maximum Option</th>
-        <th>Option A</th>
-        <th>Option B</th>
-        <th>Option C</th>
-        <th>Option D</th>
-    </tr>
-    ${summaryData.map(data => `
-        <tr>
-            <td>${formatDate(data.retireDate)}</td>
-            <td>$${formatNumber(data.maxOption)}</td>
-            <td>$${formatNumber(data.optionA)}</td>
-            <td>$${formatNumber(data.optionB)}</td>
-            <td>$${formatNumber(data.optionC)}</td>
-            <td>$${formatNumber(data.optionD)}</td>
-        </tr>
-    `).join('')}
-</table>
                 `;
                 summaryElement.innerHTML = summaryTable;
                 console.log('Summary table rendered');
