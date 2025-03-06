@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PERS Retirement Calculator 2.4</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+        }
+        h3 {
+            margin: 0 0 15px;
+            color: #34495e;
+        }
+        label {
+            display: inline-block;
+            width: 180px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="date"], input[type="number"], select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            width: 200px;
+        }
+        input[type="number"] {
+            width: 180px;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 10px;
+            background: #e8f4f8;
+            border: 1px solid #b3d4e0;
+            border-radius: 4px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        button {
+            display: block;
+            width: 200px;
+            margin: 20px auto 0;
+            padding: 10px;
+            background: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        /* Improved summary table styles */
+        .summary-table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .summary-table th, .summary-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .summary-table th {
+            background-color: #f2f2f2;
+        }
+        .summary-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PERS Retirement Calculator</h1>
+
+        <div class="section">
+            <label for="tier">Select Tier:</label>
+            <select id="tier">
+                <option value="1">Tier 1</option>
+                <option value="2">Tier 2</option>
+                <option value="3">Tier 3</option>
+                <option value="4">Tier 4</option>
+                <option value="5">Tier 5</option>
+            </select>
+        </div>
+
+        <!-- Default Work Start Date: 1990-02-05 -->
+        <!-- To remove default, delete the value attribute -->
+        <div class="section">
+            <label for="startDate">Work Start Date:</label>
+            <input type="date" id="startDate" value="1990-02-05" required>
+        </div>
+
+        <!-- Default Your Birthdate: 1966-10-28 -->
+        <!-- To remove default, delete the value attribute -->
+        <div class="section">
+            <label for="birthDate">Your Birthdate:</label>
+            <input type="date" id="birthDate" value="1966-10-28" required>
+        </div>
+
+        <!-- Default Spouse's Birthdate: 1977-07-05 -->
+        <!-- To remove default, delete the value attribute -->
+        <div class="section">
+            <label for="spouseBirthDate">Spouse's Birthdate:</label>
+            <input type="date" id="spouseBirthDate" value="1977-07-05">
+        </div>
+
+        <div class="section" id="retirement1">
+            <h3>Retirement Option 1 (Required)</h3>
+            <label for="retireDate1">Retirement Date:</label>
+            <input type="date" id="retireDate1" required>
+            <br>
+            <label for="salary1">Average Salary (36 months):</label>
+            <input type="number" id="salary1" required min="0" step="0.01">
+            <div class="result" id="result1"></div>
+        </div>
+
+        <div class="section" id="retirement2">
+            <h3>Retirement Option 2 (Optional)</h3>
+            <label for="retireDate2">Retirement Date:</label>
+            <input type="date" id="retireDate2">
+            <br>
+            <label for="salary2">Average Salary (36 months):</label>
+            <input type="number" id="salary2" min="0" step="0.01">
+            <div class="result" id="result2"></div>
+        </div>
+
+        <div class="section" id="retirement3">
+            <h3>Retirement Option 3 (Optional)</h3>
+            <label for="retireDate3">Retirement Date:</label>
+            <input type="date" id="retireDate3">
+            <br>
+            <label for="salary3">Average Salary (36 months):</label>
+            <input type="number" id="salary3" min="0" step="0.01">
+            <div class="result" id="result3"></div>
+        </div>
+
+        <div class="section" id="retirement4">
+            <h3>Retirement Option 4 (Optional)</h3>
+            <label for="retireDate4">Retirement Date:</label>
+            <input type="date" id="retireDate4">
+            <br>
+            <label for="salary4">Average Salary (36 months):</label>
+            <input type="number" id="salary4" min="0" step="0.01">
+            <div class="result" id="result4"></div>
+        </div>
+
+        <button onclick="calculate()">Calculate</button>
+        <div class="summary" id="summary"></div>
+    </div>
+
+    <script>
+        // Placeholder for option tables (unchanged from original)
+        const optionATable = {}; // Add actual data as needed
+        const optionBTable = {};
+        const optionCTable = {};
+        const optionDTable = {};
+
+        function getAgeFactor(table, memberAge, spouseAge) {
+            memberAge = Math.round(memberAge);
+            spouseAge = Math.round(spouseAge);
+            if (spouseAge < 50) spouseAge = 50; // Minimum spouse age is 50
+            return table[memberAge]?.[spouseAge] || 1; // Default to 1 if not found
+        }
+
+        function calculateYears(start, end) {
+            const diff = new Date(end) - new Date(start);
+            return diff / (1000 * 60 * 60 * 24 * 365.25);
+        }
+
+        function adjustToFirstOfMonth(dateStr) {
+            const date = new Date(dateStr);
+            date.setDate(1);
+            return date.toISOString().split('T')[0];
+        }
+
+        function formatNumber(num) {
+            const value = parseFloat(num);
+            if (isNaN(value)) return 'N/A';
+            return value >= 1000 ? value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : value.toFixed(2);
+        }
+
+        function calculate() {
+            const tier = document.getElementById('tier').value;
+            const startDate = document.getElementById('startDate').value;
+            const birthDate = document.getElementById('birthDate').value;
+            const spouseBirthDate = document.getElementById('spouseBirthDate').value;
+
+            const options = [1, 2, 3, 4].map(i => ({
+                retireDate: adjustToFirstOfMonth(document.getElementById(`retireDate${i}`).value),
+                salary: parseFloat(document.getElementById(`salary${i}`).value) || 0
+            }));
+
+            const memberAgeAtRetirement = options.map(opt => 
+                calculateYears(birthDate, opt.retireDate));
+            const spouseAgeAtRetirement = spouseBirthDate ? 
+                options.map(opt => calculateYears(spouseBirthDate, opt.retireDate)) : [];
+
+            const tierDivisors = { '1': 55, '2': 55, '3': 60, '4': 60, '5': 65 };
+            const divisor = tierDivisors[tier];
+
+            const summaryData = [];
+
+            options.forEach((opt, i) => {
+                if (!opt.retireDate || !opt.salary && i !== 0) {
+                    console.log(`Skipping Option ${i + 1}: No date or salary`);
+                    return;
+                }
+                if (i === 0 && (!opt.retireDate || !opt.salary)) {
+                    alert("Option 1 is required.");
+                    console.log('Option 1 required but missing data');
+                    return;
+                }
+
+                // Calculate service years for each option individually
+                const serviceYears = calculateYears(startDate, opt.retireDate);
+                const maxOption = (serviceYears / divisor) * opt.salary;
+
+                const ageFactorA = spouseBirthDate ? 
+                    getAgeFactor(optionATable, memberAgeAtRetirement[i], spouseAgeAtRetirement[i]) : 1;
+                const ageFactorB = spouseBirthDate ? 
+                    getAgeFactor(optionBTable, memberAgeAtRetirement[i], spouseAgeAtRetirement[i]) : 1;
+                const ageFactorC = spouseBirthDate ? 
+                    getAgeFactor(optionCTable, memberAgeAtRetirement[i], spouseAgeAtRetirement[i]) : 1;
+                const ageFactorD = spouseBirthDate ? 
+                    getAgeFactor(optionDTable, memberAgeAtRetirement[i], spouseAgeAtRetirement[i]) : 1;
+
+                const optionA = maxOption * ageFactorA;
+                const optionB = maxOption * ageFactorB;
+                const optionC = maxOption * ageFactorC;
+                const optionD = maxOption * ageFactorD;
+
+                const results = `
+                    Service Years: ${serviceYears.toFixed(2)}<br>
+                    Tier Divisor: ${divisor}<br>
+                    Average Salary: $${formatNumber(opt.salary)}<br>
+                    Max Option Calculation: (${serviceYears.toFixed(2)} / ${divisor}) × $${formatNumber(opt.salary)} = $${formatNumber(maxOption)} (Annual)<br>
+                    ${spouseBirthDate ? `Member Age: ${memberAgeAtRetirement[i].toFixed(2)}, Spouse Age: ${Math.max(spouseAgeAtRetirement[i], 50).toFixed(2)}<br>` : ''}
+                    ${spouseBirthDate ? `Option A Factor: ${ageFactorA.toFixed(4)}, ` : ''}Option A: $${formatNumber(optionA)} (Annual)<br>
+                    ${spouseBirthDate ? `Option B Factor: ${ageFactorB.toFixed(4)}, ` : ''}Option B: $${formatNumber(optionB)} (Annual)<br>
+                    ${spouseBirthDate ? `Option C Factor: ${ageFactorC.toFixed(4)}, ` : ''}Option C: $${formatNumber(optionC)} (Annual)<br>
+                    ${spouseBirthDate ? `Option D Factor: ${ageFactorD.toFixed(4)}, ` : ''}Option D: $${formatNumber(optionD)} (Annual)
+                `;
+                document.getElementById(`result${i + 1}`).innerHTML = results;
+
+                summaryData.push({
+                    retireDate: opt.retireDate,
+                    maxOption: (maxOption / 12).toFixed(2),
+                    optionA: (optionA / 12).toFixed(2),
+                    optionB: (optionB / 12).toFixed(2),
+                    optionC: (optionC / 12).toFixed(2),
+                    optionD: (optionD / 12).toFixed(2)
+                });
+            });
+
+            const summaryElement = document.getElementById('summary');
+            if (summaryData.length > 0) {
+                const summaryTable = `
+                    <h3>Summary of Retirement Options (Monthly)</h3>
+                    <table class="summary-table">
+                        <tr>
+                            <th>Retirement Date</th>
+                            <th>Maximum Option</th>
+                            <th>Option A</th>
+                            <th>Option B</th>
+                            <th>Option C</th>
+                            <th>Option D</th>
+                        </tr>
+                        ${summaryData.map(data => `
+                            <tr>
+                                <td>${data.retireDate || 'N/A'}</td>
+                                <td>$${formatNumber(data.maxOption)}</td>
+                                <td>$${formatNumber(data.optionA)}</td>
+                                <td>$${formatNumber(data.optionB)}</td>
+                                <td>$${formatNumber(data.optionC)}</td>
+                                <td>$${formatNumber(data.optionD)}</td>
+                            </tr>
+                        `).join('')}
+                    </table>
+                `;
+                summaryElement.innerHTML = summaryTable;
+            } else {
+                summaryElement.innerHTML = '<p>No valid options to summarize.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
