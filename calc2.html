@@ -375,7 +375,7 @@ const optionATable = {
                         </tr>
                         ${summaryData.map(data => `
                             <tr>
-                                <td>${data.retireDate || 'N/A'}</td>
+                                <td>${formatRetireDate(data.retireDate)}</td>
                                 <td>$${formatNumber(data.maxOption)}</td>
                                 <td>$${formatNumber(data.optionA)}</td>
                                 <td>$${formatNumber(data.optionB)}</td>
