@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PERS Retirement Calculator 2.2</title>
+    <title>PERS Retirement Calculator 2.3</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -148,6 +148,7 @@
         </div>
 
         <button onclick="calculate()">Calculate</button>
+        <div class="summary" id="summary"></div>
     </div>
 
     <script>
@@ -271,16 +272,14 @@
         const tierDivisors = { '1': 55, '2': 55, '3': 60, '4': 60, '5': 65 };
         const divisor = tierDivisors[tier];
 
-        // Array to store results for summary table
         const summaryData = [];
 
-        // Debug: Log start of calculation
         console.log('Starting calculation...');
 
         options.forEach((opt, i) => {
             if (!opt.retireDate || !opt.salary && i !== 0) {
                 console.log(`Skipping Option ${i + 1}: No date or salary`);
-                return; // Skip optional if empty
+                return;
             }
             if (i === 0 && (!opt.retireDate || !opt.salary)) {
                 alert("Option 1 is required.");
@@ -304,7 +303,6 @@
             const optionC = maxOption * ageFactorC;
             const optionD = maxOption * ageFactorD;
 
-            // Detailed calculation display (annual values)
             const results = `
                 Service Years: ${serviceYears.toFixed(2)}<br>
                 Tier Divisor: ${divisor}<br>
@@ -318,7 +316,6 @@
             `;
             document.getElementById(`result${i + 1}`).innerHTML = results;
 
-            // Store data for summary table (monthly values)
             summaryData.push({
                 retireDate: opt.retireDate,
                 maxOption: (maxOption / 12).toFixed(2),
@@ -328,43 +325,47 @@
                 optionD: (optionD / 12).toFixed(2)
             });
 
-            // Debug: Log data for this option
             console.log(`Option ${i + 1}:`, summaryData[i]);
         });
 
-        // Debug: Log summary data before rendering
         console.log('Summary Data:', summaryData);
 
-        // Generate summary table (monthly values with thousands separator)
-        if (summaryData.length > 0) {
-            const summaryTable = `
-                <h3>Summary of Retirement Options (Monthly)</h3>
-                <table>
-                    <tr>
-                        <th>Retirement Date</th>
-                        <th>Maximum Option</th>
-                        <th>Option A</th>
-                        <th>Option B</th>
-                        <th>Option C</th>
-                        <th>Option D</th>
-                    </tr>
-                    ${summaryData.map(data => `
+        // Ensure summary element exists before setting innerHTML
+        const summaryElement = document.getElementById('summary');
+        if (summaryElement) {
+            if (summaryData.length > 0) {
+                const summaryTable = `
+                    <h3>Summary of Retirement Options (Monthly)</h3>
+                    <table>
                         <tr>
-                            <td>${data.retireDate || 'N/A'}</td>
-                            <td>$${formatNumber(data.maxOption)}</td>
-                            <td>$${formatNumber(data.optionA)}</td>
-                            <td>$${formatNumber(data.optionB)}</td>
-                            <td>$${formatNumber(data.optionC)}</td>
-                            <td>$${formatNumber(data.optionD)}</td>
+                            <th>Retirement Date</th>
+                            <th>Maximum Option</th>
+                            <th>Option A</th>
+                            <th>Option B</th>
+                            <th>Option C</th>
+                            <th>Option D</th>
                         </tr>
-                    `).join('')}
-                </table>
-            `;
-            document.getElementById('summary').innerHTML = summaryTable;
-            console.log('Summary table rendered');
+                        ${summaryData.map(data => `
+                            <tr>
+                                <td>${data.retireDate || 'N/A'}</td>
+                                <td>$${formatNumber(data.maxOption)}</td>
+                                <td>$${formatNumber(data.optionA)}</td>
+                                <td>$${formatNumber(data.optionB)}</td>
+                                <td>$${formatNumber(data.optionC)}</td>
+                                <td>$${formatNumber(data.optionD)}</td>
+                            </tr>
+                        `).join('')}
+                    </table>
+                `;
+                summaryElement.innerHTML = summaryTable;
+                console.log('Summary table rendered');
+            } else {
+                summaryElement.innerHTML = '<p>No valid options to summarize.</p>';
+                console.log('No data to render summary table');
+            }
         } else {
-            document.getElementById('summary').innerHTML = '<p>No valid options to summarize.</p>';
-            console.log('No data to render summary table');
+            console.error('Summary element not found in the DOM');
+            alert('Error: Summary section not found. Please check the HTML.');
         }
     }
 </script>
