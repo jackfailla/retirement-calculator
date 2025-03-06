@@ -227,73 +227,122 @@
             70: { 50: 0.9277, 51: 0.9292, 52: 0.9308, 53: 0.9325, 54: 0.9343, 55: 0.9361, 56: 0.9380, 57: 0.9400, 58: 0.9420, 59: 0.9441, 60: 0.9463, 61: 0.9485, 62: 0.9508, 63: 0.9532, 64: 0.9556, 65: 0.9580, 66: 0.9605, 67: 0.9630, 68: 0.9655, 69: 0.9681, 70: 0.9706 }
         };
 
-        function getAgeFactor(table, memberAge, spouseAge) {
-            memberAge = Math.round(memberAge);
-            spouseAge = Math.round(spouseAge);
-            if (spouseAge < 50) spouseAge = 50; // Treat spouse age less than 50 as 50
-            return table[memberAge]?.[spouseAge] || 1; // Default to 1 if not found
-        }
+            function getAgeFactor(table, memberAge, spouseAge) {
+        memberAge = Math.round(memberAge);
+        spouseAge = Math.round(spouseAge);
+        if (spouseAge < 50) spouseAge = 50; // Treat spouse age less than 50 as 50
+        return table[memberAge]?.[spouseAge] || 1; // Default to 1 if not found
+    }
 
-        function calculateYears(start, end) {
-            const diff = new Date(end) - new Date(start);
-            return diff / (1000 * 60 * 60 * 24 * 365.25);
-        }
+    function calculateYears(start, end) {
+        const diff = new Date(end) - new Date(start);
+        return diff / (1000 * 60 * 60 * 24 * 365.25);
+    }
 
-        function adjustToFirstOfMonth(dateStr) {
-            const date = new Date(dateStr);
-            date.setDate(1);
-            return date.toISOString().split('T')[0];
-        }
+    function adjustToFirstOfMonth(dateStr) {
+        const date = new Date(dateStr);
+        date.setDate(1);
+        return date.toISOString().split('T')[0];
+    }
 
-        function calculate() {
-            const tier = document.getElementById('tier').value;
-            const startDate = document.getElementById('startDate').value;
-            const birthDate = document.getElementById('birthDate').value;
-            const spouseBirthDate = document.getElementById('spouseBirthDate').value;
+    function calculate() {
+        const tier = document.getElementById('tier').value;
+        const startDate = document.getElementById('startDate').value;
+        const birthDate = document.getElementById('birthDate').value;
+        const spouseBirthDate = document.getElementById('spouseBirthDate').value;
 
-            const options = [1, 2, 3, 4].map(i => ({
-                retireDate: adjustToFirstOfMonth(document.getElementById(`retireDate${i}`).value),
-                salary: parseFloat(document.getElementById(`salary${i}`).value) || 0
-            }));
+        const options = [1, 2, 3, 4].map(i => ({
+            retireDate: adjustToFirstOfMonth(document.getElementById(`retireDate${i}`).value),
+            salary: parseFloat(document.getElementById(`salary${i}`).value) || 0
+        }));
 
-            const memberAgeAtRetirement = options.map(opt => 
-                calculateYears(birthDate, opt.retireDate));
-            const spouseAgeAtRetirement = spouseBirthDate ? 
-                options.map(opt => calculateYears(spouseBirthDate, opt.retireDate)) : [];
-            const serviceYears = calculateYears(startDate, options[0].retireDate);
+        const memberAgeAtRetirement = options.map(opt => 
+            calculateYears(birthDate, opt.retireDate));
+        const spouseAgeAtRetirement = spouseBirthDate ? 
+            options.map(opt => calculateYears(spouseBirthDate, opt.retireDate)) : [];
+        const serviceYears = calculateYears(startDate, options[0].retireDate);
 
-            // Adjust maximum option formula based on tier
-            const tierDivisors = { '1': 55, '2': 55, '3': 60, '4': 60, '5': 65 };
-            const divisor = tierDivisors[tier];
+        // Adjust maximum option formula based on tier
+        const tierDivisors = { '1': 55, '2': 55, '3': 60, '4': 60, '5': 65 };
+        const divisor = tierDivisors[tier];
 
-            options.forEach((opt, i) => {
-                if (!opt.retireDate || !opt.salary && i !== 0) return; // Skip optional if empty
-                if (i === 0 && (!opt.retireDate || !opt.salary)) {
-                    alert("Option 1 is required.");
-                    return;
-                }
+        // Array to store results for summary table
+        const summaryData = [];
 
-                const maxOption = (serviceYears / divisor) * opt.salary;
+        options.forEach((opt, i) => {
+            if (!opt.retireDate || !opt.salary && i !== 0) return; // Skip optional if empty
+            if (i === 0 && (!opt.retireDate || !opt.salary)) {
+                alert("Option 1 is required.");
+                return;
+            }
 
-                const ageFactorA = spouseBirthDate ? 
-                    getAgeFactor(optionATable, memberAgeAtRetirement[i], spouseAgeAtRetirement[i]) : 1;
-                const ageFactorB = spouseBirthDate ? 
-                    getAgeFactor(optionBTable, memberAgeAtRetirement[i], spouseAgeAtRetirement[i]) : 1;
-                const ageFactorC = spouseBirthDate ? 
-                    getAgeFactor(optionCTable, memberAgeAtRetirement[i], spouseAgeAtRetirement[i]) : 1;
-                const ageFactorD = spouseBirthDate ? 
-                    getAgeFactor(optionDTable, memberAgeAtRetirement[i], spouseAgeAtRetirement[i]) : 1;
+            const maxOption = (serviceYears / divisor) * opt.salary;
 
-                const results = `
-                    Maximum Option: $${maxOption.toFixed(2)}<br>
-                    Option A: $${(maxOption * ageFactorA).toFixed(2)}<br>
-                    Option B: $${(maxOption * ageFactorB).toFixed(2)}<br>
-                    Option C: $${(maxOption * ageFactorC).toFixed(2)}<br>
-                    Option D: $${(maxOption * ageFactorD).toFixed(2)}
-                `;
-                document.getElementById(`result${i + 1}`).innerHTML = results;
+            const ageFactorA = spouseBirthDate ? 
+                getAgeFactor(optionATable, memberAgeAtRetirement[i], spouseAgeAtRetirement[i]) : 1;
+            const ageFactorB = spouseBirthDate ? 
+                getAgeFactor(optionBTable, memberAgeAtRetirement[i], spouseAgeAtRetirement[i]) : 1;
+            const ageFactorC = spouseBirthDate ? 
+                getAgeFactor(optionCTable, memberAgeAtRetirement[i], spouseAgeAtRetirement[i]) : 1;
+            const ageFactorD = spouseBirthDate ? 
+                getAgeFactor(optionDTable, memberAgeAtRetirement[i], spouseAgeAtRetirement[i]) : 1;
+
+            const optionA = maxOption * ageFactorA;
+            const optionB = maxOption * ageFactorB;
+            const optionC = maxOption * ageFactorC;
+            const optionD = maxOption * ageFactorD;
+
+            // Detailed calculation display
+            const results = `
+                Service Years: ${serviceYears.toFixed(2)}<br>
+                Tier Divisor: ${divisor}<br>
+                Average Salary: $${opt.salary.toFixed(2)}<br>
+                Max Option Calculation: (${serviceYears.toFixed(2)} / ${divisor}) × $${opt.salary.toFixed(2)} = $${maxOption.toFixed(2)}<br>
+                ${spouseBirthDate ? `Member Age: ${memberAgeAtRetirement[i].toFixed(2)}, Spouse Age: ${Math.max(spouseAgeAtRetirement[i], 50).toFixed(2)}<br>` : ''}
+                ${spouseBirthDate ? `Option A Factor: ${ageFactorA.toFixed(4)}, ` : ''}Option A: $${maxOption.toFixed(2)} × ${ageFactorA.toFixed(4)} = $${optionA.toFixed(2)}<br>
+                ${spouseBirthDate ? `Option B Factor: ${ageFactorB.toFixed(4)}, ` : ''}Option B: $${maxOption.toFixed(2)} × ${ageFactorB.toFixed(4)} = $${optionB.toFixed(2)}<br>
+                ${spouseBirthDate ? `Option C Factor: ${ageFactorC.toFixed(4)}, ` : ''}Option C: $${maxOption.toFixed(2)} × ${ageFactorC.toFixed(4)} = $${optionC.toFixed(2)}<br>
+                ${spouseBirthDate ? `Option D Factor: ${ageFactorD.toFixed(4)}, ` : ''}Option D: $${maxOption.toFixed(2)} × ${ageFactorD.toFixed(4)} = $${optionD.toFixed(2)}
+            `;
+            document.getElementById(`result${i + 1}`).innerHTML = results;
+
+            // Store data for summary table
+            summaryData.push({
+                retireDate: opt.retireDate,
+                maxOption: maxOption.toFixed(2),
+                optionA: optionA.toFixed(2),
+                optionB: optionB.toFixed(2),
+                optionC: optionC.toFixed(2),
+                optionD: optionD.toFixed(2)
             });
-        }
-    </script>
+        });
+
+        // Generate summary table
+        const summaryTable = `
+            <h3>Summary of Retirement Options</h3>
+            <table>
+                <tr>
+                    <th>Retirement Date</th>
+                    <th>Maximum Option</th>
+                    <th>Option A</th>
+                    <th>Option B</th>
+                    <th>Option C</th>
+                    <th>Option D</th>
+                </tr>
+                ${summaryData.map(data => `
+                    <tr>
+                        <td>${data.retireDate || 'N/A'}</td>
+                        <td>$${data.maxOption || 'N/A'}</td>
+                        <td>$${data.optionA || 'N/A'}</td>
+                        <td>$${data.optionB || 'N/A'}</td>
+                        <td>$${data.optionC || 'N/A'}</td>
+                        <td>$${data.optionD || 'N/A'}</td>
+                    </tr>
+                `).join('')}
+            </table>
+        `;
+        document.getElementById('summary').innerHTML = summaryTable;
+    }
+</script>
 </body>
 </html>
