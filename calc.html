@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PERS Retirement Calculator 2.1</title>
+    <title>PERS Retirement Calculator 2.2</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -246,7 +246,6 @@
     }
 
     function formatNumber(num) {
-        // Convert to number and format with thousands separator if >= 1000
         const value = parseFloat(num);
         if (isNaN(value)) return 'N/A';
         return value >= 1000 ? value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : value.toFixed(2);
@@ -269,17 +268,23 @@
             options.map(opt => calculateYears(spouseBirthDate, opt.retireDate)) : [];
         const serviceYears = calculateYears(startDate, options[0].retireDate);
 
-        // Adjust maximum option formula based on tier
         const tierDivisors = { '1': 55, '2': 55, '3': 60, '4': 60, '5': 65 };
         const divisor = tierDivisors[tier];
 
         // Array to store results for summary table
         const summaryData = [];
 
+        // Debug: Log start of calculation
+        console.log('Starting calculation...');
+
         options.forEach((opt, i) => {
-            if (!opt.retireDate || !opt.salary && i !== 0) return; // Skip optional if empty
+            if (!opt.retireDate || !opt.salary && i !== 0) {
+                console.log(`Skipping Option ${i + 1}: No date or salary`);
+                return; // Skip optional if empty
+            }
             if (i === 0 && (!opt.retireDate || !opt.salary)) {
                 alert("Option 1 is required.");
+                console.log('Option 1 required but missing data');
                 return;
             }
 
@@ -322,33 +327,45 @@
                 optionC: (optionC / 12).toFixed(2),
                 optionD: (optionD / 12).toFixed(2)
             });
+
+            // Debug: Log data for this option
+            console.log(`Option ${i + 1}:`, summaryData[i]);
         });
 
+        // Debug: Log summary data before rendering
+        console.log('Summary Data:', summaryData);
+
         // Generate summary table (monthly values with thousands separator)
-        const summaryTable = `
-            <h3>Summary of Retirement Options (Monthly)</h3>
-            <table>
-                <tr>
-                    <th>Retirement Date</th>
-                    <th>Maximum Option</th>
-                    <th>Option A</th>
-                    <th>Option B</th>
-                    <th>Option C</th>
-                    <th>Option D</th>
-                </tr>
-                ${summaryData.map(data => `
+        if (summaryData.length > 0) {
+            const summaryTable = `
+                <h3>Summary of Retirement Options (Monthly)</h3>
+                <table>
                     <tr>
-                        <td>${data.retireDate || 'N/A'}</td>
-                        <td>$${formatNumber(data.maxOption)}</td>
-                        <td>$${formatNumber(data.optionA)}</td>
-                        <td>$${formatNumber(data.optionB)}</td>
-                        <td>$${formatNumber(data.optionC)}</td>
-                        <td>$${formatNumber(data.optionD)}</td>
+                        <th>Retirement Date</th>
+                        <th>Maximum Option</th>
+                        <th>Option A</th>
+                        <th>Option B</th>
+                        <th>Option C</th>
+                        <th>Option D</th>
                     </tr>
-                `).join('')}
-            </table>
-        `;
-        document.getElementById('summary').innerHTML = summaryTable;
+                    ${summaryData.map(data => `
+                        <tr>
+                            <td>${data.retireDate || 'N/A'}</td>
+                            <td>$${formatNumber(data.maxOption)}</td>
+                            <td>$${formatNumber(data.optionA)}</td>
+                            <td>$${formatNumber(data.optionB)}</td>
+                            <td>$${formatNumber(data.optionC)}</td>
+                            <td>$${formatNumber(data.optionD)}</td>
+                        </tr>
+                    `).join('')}
+                </table>
+            `;
+            document.getElementById('summary').innerHTML = summaryTable;
+            console.log('Summary table rendered');
+        } else {
+            document.getElementById('summary').innerHTML = '<p>No valid options to summarize.</p>';
+            console.log('No data to render summary table');
+        }
     }
 </script>
 </body>
