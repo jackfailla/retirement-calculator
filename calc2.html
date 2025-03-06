@@ -254,10 +254,13 @@ const optionATable = {
         };
 
         function getAgeFactor(table, memberAge, spouseAge) {
-            memberAge = Math.round(memberAge);
-            spouseAge = Math.round(spouseAge);
-            if (spouseAge < 50) spouseAge = 50; // Minimum spouse age is 50
-            return table[memberAge]?.[spouseAge] || 1; // Default to 1 if not found
+            const roundedMemberAge = Math.round(memberAge);
+            const roundedSpouseAge = Math.round(spouseAge);
+            const effectiveSpouseAge = roundedSpouseAge < 50 ? 50 : roundedSpouseAge;
+            console.log(`Looking up factor for Member Age: ${roundedMemberAge}, Spouse Age: ${effectiveSpouseAge}`);
+            const factor = table[roundedMemberAge]?.[effectiveSpouseAge];
+            console.log(factor ? `Found factor: ${factor}` : 'No factor found, defaulting to 1');
+            return factor || 1;
         }
 
         function calculateYears(start, end) {
@@ -266,7 +269,9 @@ const optionATable = {
         }
 
         function adjustToFirstOfMonth(dateStr) {
+            if (!dateStr) return null; // If there’s no date, stop and return null
             const date = new Date(dateStr);
+            if (isNaN(date)) return null; // If the date isn’t valid, stop and return null
             date.setDate(1);
             return date.toISOString().split('T')[0];
         }
@@ -299,15 +304,20 @@ const optionATable = {
             const summaryData = [];
 
             options.forEach((opt, i) => {
-                if (!opt.retireDate || !opt.salary && i !== 0) {
-                    console.log(`Skipping Option ${i + 1}: No date or salary`);
-                    return;
-                }
-                if (i === 0 && (!opt.retireDate || !opt.salary)) {
-                    alert("Option 1 is required.");
-                    console.log('Option 1 required but missing data');
-                    return;
-                }
+            if (!opt.retireDate || opt.retireDate === null) {
+                console.log(`Invalid retirement date for Option ${i + 1}`);
+                document.getElementById(`result${i + 1}`).innerHTML = 'Invalid retirement date';
+                return;
+            }
+            if (!opt.salary && i !== 0) {
+                console.log(`Skipping Option ${i + 1}: No salary`);
+                return;
+            }
+            if (i === 0 && (!opt.retireDate || !opt.salary)) {
+                alert("Option 1 is required.");
+                console.log('Option 1 required but missing data');
+                return;
+            }
 
                 // Calculate service years for each option individually
                 const serviceYears = calculateYears(startDate, opt.retireDate);
