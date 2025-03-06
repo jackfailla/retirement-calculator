@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PERS Retirement Calculator 2.0</title>
+    <title>PERS Retirement Calculator 2.1</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -227,7 +227,7 @@
             70: { 50: 0.9277, 51: 0.9292, 52: 0.9308, 53: 0.9325, 54: 0.9343, 55: 0.9361, 56: 0.9380, 57: 0.9400, 58: 0.9420, 59: 0.9441, 60: 0.9463, 61: 0.9485, 62: 0.9508, 63: 0.9532, 64: 0.9556, 65: 0.9580, 66: 0.9605, 67: 0.9630, 68: 0.9655, 69: 0.9681, 70: 0.9706 }
         };
 
-            function getAgeFactor(table, memberAge, spouseAge) {
+    function getAgeFactor(table, memberAge, spouseAge) {
         memberAge = Math.round(memberAge);
         spouseAge = Math.round(spouseAge);
         if (spouseAge < 50) spouseAge = 50; // Treat spouse age less than 50 as 50
@@ -243,6 +243,13 @@
         const date = new Date(dateStr);
         date.setDate(1);
         return date.toISOString().split('T')[0];
+    }
+
+    function formatNumber(num) {
+        // Convert to number and format with thousands separator if >= 1000
+        const value = parseFloat(num);
+        if (isNaN(value)) return 'N/A';
+        return value >= 1000 ? value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : value.toFixed(2);
     }
 
     function calculate() {
@@ -292,34 +299,34 @@
             const optionC = maxOption * ageFactorC;
             const optionD = maxOption * ageFactorD;
 
-            // Detailed calculation display
+            // Detailed calculation display (annual values)
             const results = `
                 Service Years: ${serviceYears.toFixed(2)}<br>
                 Tier Divisor: ${divisor}<br>
-                Average Salary: $${opt.salary.toFixed(2)}<br>
-                Max Option Calculation: (${serviceYears.toFixed(2)} / ${divisor}) × $${opt.salary.toFixed(2)} = $${maxOption.toFixed(2)}<br>
+                Average Salary: $${formatNumber(opt.salary)}<br>
+                Max Option Calculation: (${serviceYears.toFixed(2)} / ${divisor}) × $${formatNumber(opt.salary)} = $${formatNumber(maxOption)}<br>
                 ${spouseBirthDate ? `Member Age: ${memberAgeAtRetirement[i].toFixed(2)}, Spouse Age: ${Math.max(spouseAgeAtRetirement[i], 50).toFixed(2)}<br>` : ''}
-                ${spouseBirthDate ? `Option A Factor: ${ageFactorA.toFixed(4)}, ` : ''}Option A: $${maxOption.toFixed(2)} × ${ageFactorA.toFixed(4)} = $${optionA.toFixed(2)}<br>
-                ${spouseBirthDate ? `Option B Factor: ${ageFactorB.toFixed(4)}, ` : ''}Option B: $${maxOption.toFixed(2)} × ${ageFactorB.toFixed(4)} = $${optionB.toFixed(2)}<br>
-                ${spouseBirthDate ? `Option C Factor: ${ageFactorC.toFixed(4)}, ` : ''}Option C: $${maxOption.toFixed(2)} × ${ageFactorC.toFixed(4)} = $${optionC.toFixed(2)}<br>
-                ${spouseBirthDate ? `Option D Factor: ${ageFactorD.toFixed(4)}, ` : ''}Option D: $${maxOption.toFixed(2)} × ${ageFactorD.toFixed(4)} = $${optionD.toFixed(2)}
+                ${spouseBirthDate ? `Option A Factor: ${ageFactorA.toFixed(4)}, ` : ''}Option A: $${formatNumber(maxOption)} × ${ageFactorA.toFixed(4)} = $${formatNumber(optionA)}<br>
+                ${spouseBirthDate ? `Option B Factor: ${ageFactorB.toFixed(4)}, ` : ''}Option B: $${formatNumber(maxOption)} × ${ageFactorB.toFixed(4)} = $${formatNumber(optionB)}<br>
+                ${spouseBirthDate ? `Option C Factor: ${ageFactorC.toFixed(4)}, ` : ''}Option C: $${formatNumber(maxOption)} × ${ageFactorC.toFixed(4)} = $${formatNumber(optionC)}<br>
+                ${spouseBirthDate ? `Option D Factor: ${ageFactorD.toFixed(4)}, ` : ''}Option D: $${formatNumber(maxOption)} × ${ageFactorD.toFixed(4)} = $${formatNumber(optionD)}
             `;
             document.getElementById(`result${i + 1}`).innerHTML = results;
 
-            // Store data for summary table
+            // Store data for summary table (monthly values)
             summaryData.push({
                 retireDate: opt.retireDate,
-                maxOption: maxOption.toFixed(2),
-                optionA: optionA.toFixed(2),
-                optionB: optionB.toFixed(2),
-                optionC: optionC.toFixed(2),
-                optionD: optionD.toFixed(2)
+                maxOption: (maxOption / 12).toFixed(2),
+                optionA: (optionA / 12).toFixed(2),
+                optionB: (optionB / 12).toFixed(2),
+                optionC: (optionC / 12).toFixed(2),
+                optionD: (optionD / 12).toFixed(2)
             });
         });
 
-        // Generate summary table
+        // Generate summary table (monthly values with thousands separator)
         const summaryTable = `
-            <h3>Summary of Retirement Options</h3>
+            <h3>Summary of Retirement Options (Monthly)</h3>
             <table>
                 <tr>
                     <th>Retirement Date</th>
@@ -332,11 +339,11 @@
                 ${summaryData.map(data => `
                     <tr>
                         <td>${data.retireDate || 'N/A'}</td>
-                        <td>$${data.maxOption || 'N/A'}</td>
-                        <td>$${data.optionA || 'N/A'}</td>
-                        <td>$${data.optionB || 'N/A'}</td>
-                        <td>$${data.optionC || 'N/A'}</td>
-                        <td>$${data.optionD || 'N/A'}</td>
+                        <td>$${formatNumber(data.maxOption)}</td>
+                        <td>$${formatNumber(data.optionA)}</td>
+                        <td>$${formatNumber(data.optionB)}</td>
+                        <td>$${formatNumber(data.optionC)}</td>
+                        <td>$${formatNumber(data.optionD)}</td>
                     </tr>
                 `).join('')}
             </table>
